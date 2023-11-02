@@ -2,8 +2,8 @@ name: Build and push image
 
 on:
   push:
-    branches:
-      - master
+    tags:
+      - v*
 
 permissions:
   contents: read
@@ -24,10 +24,17 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Tag and Push
         env:
-          GH_IMAGE: ghcr.io/${{ github.repository }}:${{ github.sha }}
+          GH_IMAGE: ghcr.io/${{ github.repository }}:${{ github.ref_name }}
         run: |
           IMAGE="$(docker load -i result | awk '{print $3}')"
           docker tag "$IMAGE" "$GH_IMAGE"
           docker push "$GH_IMAGE"
+
+      - uses: Azure/setup-helm@v3
+      - run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          helm package --version "$VERSION" --app-version "$GITHUB_REF_NAME" -d pkg/ chart/
+          helm push ./pkg/*.tgz "oci://ghcr.io/$GITHUB_REPOSITORY_OWNER"

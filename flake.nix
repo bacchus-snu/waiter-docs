@@ -4,25 +4,13 @@
       let
         lib = nixpkgs.lib;
         pkgs = nixpkgs.legacyPackages.${system};
-        placeholder = self.packages.${system}.placeholder;
+        pkg = self.packages.${system}.default;
       in
       {
         packages = {
-          placeholder = pkgs.stdenvNoCC.mkDerivation {
-            name = "placeholder";
-            src = pkgs.fetchFromGitHub {
-              owner = "bacchus-snu";
-              repo = "snucse-gpu-service-manual";
-              rev = "3dd6d4df9b6c8ffbcc6073826527f119c7fd937f";
-              hash = "sha256-e9GANnoJpUggZROINZ0kxtrjA4uubrhzEIWjNCONE5U=";
-            };
-
-            postPatch = ''
-              cat <<EOF > src/robots.txt
-              User-Agent: *
-              Disallow: /
-              EOF
-            '';
+          default = pkgs.stdenvNoCC.mkDerivation {
+            name = "waiter-docs";
+            src = ./.;
 
             nativeBuildInputs = with pkgs; [ mdbook mdbook-i18n-helpers ];
 
@@ -34,7 +22,7 @@
             let
               caddyfile = pkgs.writeText "Caddyfile" ''
                 :8080 {
-                  root * ${placeholder}
+                  root * ${pkg}
                   file_server
                   handle_errors {
                     rewrite * /{err.status_code}.html
