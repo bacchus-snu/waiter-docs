@@ -41,6 +41,9 @@
                     file_server
                   }
 
+                  # much performance
+                  encode zstd gzip
+
                   # such secure
                   header {
                     X-Frame-Options DENY
