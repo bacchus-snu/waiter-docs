@@ -1,2 +1,5 @@
 [book]
 title = "Bacchus Waiter"
+
+[output.html]
+default-theme = "navy"
