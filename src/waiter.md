@@ -28,6 +28,9 @@ kubectl config set-credentials bacchus-waiter \
 kubectl config set-context bacchus-waiter \
     --cluster=bacchus-waiter \
     --user=bacchus-waiter
+
+# Switch to the context
+kubectl config use-context bacchus-waiter
 ```
 
 Verify with `kubectl auth whoami`.
