@@ -37,6 +37,10 @@
                     X-Frame-Options DENY
                     X-XSS-Protection 0
                     X-Content-Type-Options nosniff
+                    Referrer-Policy strict-origin-when-cross-origin
+                    Strict-Transport-Security max-age=31536000
+                    # Breaks some features, but we don't care
+                    Content-Security-Policy "default-src 'none'; img-src 'self'; script-src 'self'; style-src 'self'; font-src 'self';"
                   }
                 }
               '';
