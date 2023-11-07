@@ -44,7 +44,7 @@
               '';
             in
             pkgs.dockerTools.buildLayeredImage {
-              name = "secure-front";
+              name = "waiter-docs";
               config = {
                 User = "1000";
                 Cmd = [
