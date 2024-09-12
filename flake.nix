@@ -1,8 +1,19 @@
 {
-  outputs = { self, flake-utils, nixpkgs }:
-    flake-utils.lib.eachDefaultSystem (system:
+  inputs = {
+    flake-utils.url = "github:numtide/flake-utils";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+  };
+
+  outputs =
+    {
+      self,
+      flake-utils,
+      nixpkgs,
+    }:
+    flake-utils.lib.eachDefaultSystem (
+      system:
       let
-        lib = nixpkgs.lib;
+        inherit (nixpkgs) lib;
         pkgs = nixpkgs.legacyPackages.${system};
         pkg = self.packages.${system}.default;
       in
@@ -12,7 +23,10 @@
             name = "waiter-docs";
             src = ./.;
 
-            nativeBuildInputs = with pkgs; [ mdbook mdbook-i18n-helpers ];
+            nativeBuildInputs = with pkgs; [
+              mdbook
+              mdbook-i18n-helpers
+            ];
 
             buildPhase = ''
               mdbook build -d $out
@@ -28,6 +42,7 @@
                     rewrite * /{err.status_code}.html
                     file_server
                   }
+                  log
 
                   # much performance
                   encode zstd gzip
