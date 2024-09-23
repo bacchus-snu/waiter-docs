@@ -4,8 +4,6 @@
 
 ### Prerequisites
 
-**Download**
-
 - [waiter-ca.pem](waiter-ca.pem)
 - [kubelogin](https://github.com/int128/kubelogin)
 
@@ -21,7 +19,7 @@ kubectl config set-cluster bacchus-waiter \
     --certificate-authority=waiter-ca.pem
 
 # Configure authentication
-kubectl config set-credentials bacchus-waiter \
+kubectl config set-credentials bacchus-dex \
     --exec-api-version=client.authentication.k8s.io/v1beta1 \
     --exec-command=kubectl \
     --exec-arg=oidc-login \
@@ -35,15 +33,14 @@ kubectl config set-credentials bacchus-waiter \
 # Configure context
 kubectl config set-context bacchus-waiter \
     --cluster=bacchus-waiter \
-    --user=bacchus-waiter
+    --user=bacchus-dex
 
 # Switch to the context
 kubectl config use-context bacchus-waiter
+
+# Verify configuration
+kubectl auth whoami
 ```
-
-Verify with `kubectl auth whoami`.
-
-Grant access in the webpage.
 
 ---
 
@@ -78,7 +75,3 @@ Change `kubelogin.exe` to `kubectl-oidc_login.exe`.
 Verify with `kubectl auth whoami`.
 
 Grant access in the webpage.
-
-## VPN
-
-TODO
