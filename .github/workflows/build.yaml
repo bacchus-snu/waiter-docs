@@ -20,8 +20,12 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository }}
 
-      - uses: cachix/install-nix-action@v27
-      - run: nix build .#docker
+      - uses: cachix/install-nix-action@v30
+
+      - name: Build container image
+        id: build
+        run: |
+          echo "result=$(nix build --no-link --print-out-paths .#docker)" >> "$GITHUB_OUTPUT"
 
       - uses: docker/login-action@v3
         with:
@@ -32,9 +36,10 @@ jobs:
       - name: Publish container images
         env:
           IMAGES: ${{ steps.meta.outputs.tags }}
+          RESULT: ${{ steps.build.outputs.result }}
         run: |
           for img in $IMAGES; do
-            skopeo copy docker-archive:result "docker://$img"
+            skopeo copy "docker-archive:$RESULT" "docker://$img"
           done
       - name: Publish Helm chart
         run: |
