@@ -25,8 +25,7 @@ kubectl config set-credentials bacchus-dex \
     --exec-arg=--oidc-issuer-url=https://auth.bacchus.io/dex \
     --exec-arg=--oidc-client-id=bacchus-waiter \
     --exec-arg=--oidc-extra-scope=email \
-    --exec-arg=--oidc-extra-scope=groups \
-    --exec-arg=--oidc-use-pkce
+    --exec-arg=--oidc-extra-scope=groups
 
 # Configure context
 kubectl config set-context snucse-sommelier-bacchus \
